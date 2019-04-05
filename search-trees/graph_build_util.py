@@ -5,10 +5,11 @@ class Node():
 	def __init__(self, node, h=0):
 		self._node = node
 		self._h = h
-		self._g = 0
+		self._g = 1
+		self._f = self._g + self._h
 
 	def get_f(self):
-		return self._h + self._g
+		return self._f
 
 class Graph():
 	def __init__(self, nodes, edges, directed=False, weighted=False):
