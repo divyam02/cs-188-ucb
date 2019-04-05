@@ -1,4 +1,5 @@
-import heapq
+from heapq import *
+from graph_build_util import *
 import math
 
 class uniform_cost_search():
@@ -15,7 +16,16 @@ class uniform_cost_search():
 
 	def find_optimal_path(self):
 		min_dist = math.inf
-		heap = heapq()
-		nodes = self._nodes.keys()
-		heap.heapify(nodes)
-		
+		heap = self._nodes.keys()
+		heapify(heap)
+		explored = []
+		while len(heap) > 0:
+			f_cost, index = heap.heappop()			# tuple containing f-cost and node index
+			for i in self._graph[index]:
+				self._nodes[i]._f += f_cost
+				heap.heappush((self._nodes[i].get_f(), i))
+
+			if index in goals:
+				return(self._nodes[i].get_f())
+			
+	def 
