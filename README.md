@@ -16,5 +16,5 @@ Here you will find implementations of assignments, homeworks, demos and other in
 * ***Solutions:*** Assignments to all variables satisfying all constraints.
 ### How to deal with constraint violations?
 * **Filtering:** Ruling out candidates for unassigned variables by keeping track of domains of unassigned variables.
-  * **Forward Checking:** Check immediate violations. The problem gets detected only when the domain of a domain upon assignment is empty.
+  * **Forward Checking:** Check immediate violations. The problem gets detected only when the domain of a domain upon assignment is empty. We enforce consistency by deleting conflicting candidates from the variable domain.
   * **Constraint Propagation:** Pending...
