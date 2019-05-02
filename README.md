@@ -17,4 +17,7 @@ Here you will find implementations of assignments, homeworks, demos and other in
 ### How to deal with constraint violations?
 * **Filtering:** Ruling out candidates for unassigned variables by keeping track of domains of unassigned variables.
   * **Forward Checking:** Check immediate violations. The problem gets detected only when the domain of a domain upon assignment is empty. We enforce consistency by deleting conflicting candidates from the variable domain.
-  * **Constraint Propagation:** Pending...
+  * **Arc Consistency:** If the constraints are given as a graph between variables and each variable has all of its possible candidates, problems can be detected and removed earlier. A directed edge(arc) from A to B is consistent iff for all x in the domain of A (tail) there is some y in the domain of B (head) such that upon assignment there is no constraint violation.
+  eg. Constraint: a!=b. So, {3} <- {1,2,3} is not consistent but {1,3} <- {1,2,3} is. 
+  
+  Now to enforce consistency, we must delete conflicting candidates of the tail domain, but then all other arcs with their head in this node will have to be checked for consistency again.
