@@ -20,4 +20,7 @@ Here you will find implementations of assignments, homeworks, demos and other in
   * **Arc Consistency:** If the constraints are given as a graph between variables and each variable has all of its possible candidates, problems can be detected and removed earlier. A directed edge(arc) from A to B is consistent iff for all x in the domain of A (tail) there is some y in the domain of B (head) such that upon assignment there is no constraint violation.
   eg. Constraint: a!=b. So, {3} <- {1,2,3} is not consistent but {1,3} <- {1,2,3} is. 
   
-  Now to enforce consistency, we must delete conflicting candidates of the tail domain, but then all other arcs with their head in this node will have to be checked for consistency again.
+  Now to enforce consistency, we must delete conflicting candidates of the tail domain, but then all other arcs with their head in this node will have to be checked for consistency again. However this is only enforcing consistency between pairs of variables and indeed fails for 3 way constraints. eg. A={1,2} B={1,2} and C=={1,2} with the previous constraint. Then A<-B, B<-C, C<-A are all consistent. But there is no legal assignment for all three.
+* **Ordering:** Order in which variables are to be chosen. For CSPs we have heuristics based on variables and values assigned.
+ * **Variable Order:** Select the variable with minimum remaining values in its domain. This is the most constrained variable and upon should the assignment be invalid it will have lesser backtracking.
+ * **Value Order:** Select the value that rules out the fewest values.
