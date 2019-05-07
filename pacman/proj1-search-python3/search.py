@@ -307,7 +307,74 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #util.raiseNotDefined()
+    print("Start:",problem.getStartState())
+    print(type(problem.getStartState()))
+    print("Is start a goal?", problem.isGoalState(problem.getStartState()))
+    print("Start state successors:", problem.getSuccessors(problem.getStartState()))
+    print(type(problem.getSuccessors(problem.getStartState())))
+
+    """
+    Check legal actions for every state. Encounter leaf node iff no legal actions remaining...
+    Make grid to mark visited nodes. (Copy GameState.getWalls())
+    Keep stack to append or pop legal path.
+    """
+
+    from searchAgents import manhattanHeuristic as h_dist
+
+    visited_grid = dict()
+    parent_dict = dict()
+    var_dict = dict()
+
+    start_state_var = (problem.getStartState(), '', 0)
+    fringe = util.PriorityQueue()
+    fringe.push(start_state_var, 0)
+
+    goal_state = util.Stack()
+    goal_path = util.Stack()
+
+    parent_dict[problem.getStartState()] = 0
+
+    while(not fringe.isEmpty()):
+        next_state, action, cost = fringe.pop()
+        """
+        By adding to visited grid here, I am ensuring the minimum fringe value is expanded
+        first. Suppose there is some other node such that cost to a given node is lesser
+        than the current path, though cost of getting to that node is higher than current 
+        path. Then if the cost of current path + node > other node, the other node is expanded.
+        """
+        visited_grid[next_state] = None
+        var_dict[next_state] = (next_state, action)
+
+        if(problem.isGoalState(next_state)):
+            print("Hit goal state:", next_state)
+            parent_state = next_state
+            _, action = var_dict[parent_state]
+            goal_state.push(action)
+
+            while parent_state!=problem.getStartState():
+                parent_state = parent_dict[parent_state]
+                _, action = var_dict[parent_state]
+                goal_state.push(action)
+
+            while not goal_state.isEmpty():
+                goal_path.push(goal_state.pop())
+
+            print(goal_path.list[1:])
+            print(len(goal_path.list[1:]))
+            return goal_path.list[1:]
+
+        else:
+            no_successors = True
+            successor_list = problem.getSuccessors(next_state)
+
+            for i, j, k in successor_list:
+                if not i in visited_grid:
+                    fringe.push((i, j, cost+k), cost+k+h_dist(i, problem))
+                    parent_dict[i] = next_state
+                    no_successors = False
+
+    return goal_path
     
 
 # Abbreviations
