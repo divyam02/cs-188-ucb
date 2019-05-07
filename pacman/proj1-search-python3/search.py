@@ -70,7 +70,9 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    e = Directions.EAST
+    return  [w, w, w, w, s, s, e, s, s, w]
+    #return [w,w,w]
 
 def depthFirstSearch(problem):
     """
@@ -87,17 +89,205 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #util.raiseNotDefined()
+    print("Start:",problem.getStartState())
+    print(type(problem.getStartState()))
+    print("Is start a goal?", problem.isGoalState(problem.getStartState()))
+    print("Start state successors:", problem.getSuccessors(problem.getStartState()))
+    print(type(problem.getSuccessors(problem.getStartState())))
+
+    """
+    Check legal actions for every state. Encounter leaf node iff no legal actions remaining...
+    Make grid to mark visited nodes. (Copy GameState.getWalls())
+    Keep stack to append or pop legal path.
+    """
+    visited_grid = dict()
+    parent_dict = dict()
+    var_dict = dict()
+
+    start_state_var = (problem.getStartState(), '', 0)
+    fringe = util.Stack()
+    fringe.push(start_state_var)
+    goal_state = util.Stack()
+    goal_path = util.Stack()
+
+    parent_dict[problem.getStartState()] = 0
+
+    while(not fringe.isEmpty()):
+        next_state, action, cost = fringe.pop()
+        visited_grid[next_state] = None
+        var_dict[next_state] = (next_state, action, cost)
+        #goal_path.push(action)
+
+        #print("Next state:",next_state)
+        #print("goal_path:",goal_path.list)
+        #print("visited_grid:",visited_grid.keys())
+
+        if(problem.isGoalState(next_state)):
+            print("Hit goal state:", next_state)
+            # Start traceback...
+            #return goal_path.list[1:]
+            #goal_path.push(var_dict[next_state][1])
+            parent_state = next_state
+            _1, action, _2 = var_dict[parent_state]
+            #print(action)
+            goal_state.push(action)
+            while parent_state!=problem.getStartState():
+                #print("Parent state:",parent_state)
+                parent_state = parent_dict[parent_state]
+                _1, action, _2 = var_dict[parent_state]
+                #print(action)
+                goal_state.push(action)
+
+            while not goal_state.isEmpty():
+                goal_path.push(goal_state.pop())
+
+            print(goal_path.list[1:])
+            print(len(goal_path.list[1:]))
+            return goal_path.list[1:]
+
+        else:
+            """
+            Maintain grid copy and mark off visited nodes...
+            Leaf if all successor states already visited.
+            Keep dict node:parent to get path.
+            """
+            no_successors = True
+            successor_list = problem.getSuccessors(next_state)
+
+            for i, j, k in successor_list:
+                if not i in visited_grid:
+                    fringe.push((i, j, k))
+                    parent_dict[i] = next_state
+                    no_successors = False
+
+            #print("successor_list:",successor_list)
+            #print("Fringe:", fringe.list)
+
+    return goal_path
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #util.raiseNotDefined()
+    print("Start:",problem.getStartState())
+    print(type(problem.getStartState()))
+    print("Is start a goal?", problem.isGoalState(problem.getStartState()))
+    print("Start state successors:", problem.getSuccessors(problem.getStartState()))
+    print(type(problem.getSuccessors(problem.getStartState())))
+
+    """
+    Check legal actions for every state. Encounter leaf node iff no legal actions remaining...
+    Make grid to mark visited nodes. (Copy GameState.getWalls())
+    Keep stack to append or pop legal path.
+    """
+    visited_grid = dict()
+    parent_dict = dict()
+    var_dict = dict()
+
+    start_state_var = (problem.getStartState(), '', 0)
+    fringe = util.Queue()
+    fringe.push(start_state_var)
+    goal_state = util.Stack()
+    goal_path = util.Stack()
+
+    parent_dict[problem.getStartState()] = 0
+
+    while(not fringe.isEmpty()):
+        next_state, action, cost = fringe.pop()
+        visited_grid[next_state] = None
+        var_dict[next_state] = (next_state, action, cost)
+
+        if(problem.isGoalState(next_state)):
+            print("Hit goal state:", next_state)
+            parent_state = next_state
+            _1, action, _2 = var_dict[parent_state]
+            goal_state.push(action)
+            while parent_state!=problem.getStartState():
+                parent_state = parent_dict[parent_state]
+                _1, action, _2 = var_dict[parent_state]
+                goal_state.push(action)
+
+            while not goal_state.isEmpty():
+                goal_path.push(goal_state.pop())
+
+            print(goal_path.list[1:])
+            print(len(goal_path.list[1:]))
+            return goal_path.list[1:]
+
+        else:
+            no_successors = True
+            successor_list = problem.getSuccessors(next_state)
+
+            for i, j, k in successor_list:
+                if not i in visited_grid:
+                    fringe.push((i, j, k))
+                    parent_dict[i] = next_state
+                    no_successors = False
+
+    return goal_path
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #util.raiseNotDefined()
+    print("Start:",problem.getStartState())
+    print(type(problem.getStartState()))
+    print("Is start a goal?", problem.isGoalState(problem.getStartState()))
+    print("Start state successors:", problem.getSuccessors(problem.getStartState()))
+    print(type(problem.getSuccessors(problem.getStartState())))
+
+    """
+    Check legal actions for every state. Encounter leaf node iff no legal actions remaining...
+    Make grid to mark visited nodes. (Copy GameState.getWalls())
+    Keep stack to append or pop legal path.
+    """
+    visited_grid = dict()
+    parent_dict = dict()
+    var_dict = dict()
+
+    start_state_var = (problem.getStartState(), '', 0)
+    fringe = util.PriorityQueue()
+    fringe.push(start_state_var)
+    goal_state = util.Stack()
+    goal_path = util.Stack()
+
+    parent_dict[problem.getStartState()] = 0
+
+    while(not fringe.isEmpty()):
+        next_state, action, cost = fringe.pop()
+        visited_grid[next_state] = None
+        var_dict[next_state] = (next_state, action, cost)
+
+        if(problem.isGoalState(next_state)):
+            print("Hit goal state:", next_state)
+            parent_state = next_state
+            _1, action, _2 = var_dict[parent_state]
+            goal_state.push(action)
+            while parent_state!=problem.getStartState():
+                parent_state = parent_dict[parent_state]
+                _1, action, _2 = var_dict[parent_state]
+                goal_state.push(action)
+
+            while not goal_state.isEmpty():
+                goal_path.push(goal_state.pop())
+
+            print(goal_path.list[1:])
+            print(len(goal_path.list[1:]))
+            return goal_path.list[1:]
+
+        else:
+            no_successors = True
+            successor_list = problem.getSuccessors(next_state)
+
+            for i, j, k in successor_list:
+                if not i in visited_grid:
+                    fringe.push((i, j, k))
+                    parent_dict[i] = next_state
+                    no_successors = False
+
+    return goal_path
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -110,7 +300,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
-
+    
 
 # Abbreviations
 bfs = breadthFirstSearch

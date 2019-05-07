@@ -87,8 +87,10 @@ class GameState:
         if self.isWin() or self.isLose(): return []
 
         if agentIndex == 0:  # Pacman is moving
+            print(PacmanRules.getLegalActions( self ))
             return PacmanRules.getLegalActions( self )
         else:
+            print(GhostRules.getLegalActions(self, agentIndex ))
             return GhostRules.getLegalActions( self, agentIndex )
 
     def generateSuccessor( self, agentIndex, action):

@@ -34,6 +34,18 @@ class KeyboardAgent(Agent):
         self.keys = []
 
     def getAction( self, state):
+
+        print(state.getLegalActions())
+        #print(state.generateSuccessor())
+        print(state.getLegalPacmanActions())
+        print(state.getGhostPositions())
+        print(state.getWalls())
+        print()
+        print(state.getFood())
+        print(state.hasWall(1, 1))
+        print(type(state.getWalls()))
+        assert 1<0
+
         from graphicsUtils import keys_waiting
         from graphicsUtils import keys_pressed
         keys = list(keys_waiting()) + list(keys_pressed())

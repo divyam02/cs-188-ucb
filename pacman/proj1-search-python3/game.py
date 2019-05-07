@@ -35,6 +35,8 @@ class Agent:
     following methods which will be called if they exist:
 
     def registerInitialState(self, state): # inspects the starting state
+
+    @Note: state variable used below are always 'GameState' class objects.
     """
     def __init__(self, index=0):
         self.index = index
