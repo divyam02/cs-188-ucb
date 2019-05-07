@@ -248,7 +248,8 @@ def uniformCostSearch(problem):
 
     start_state_var = (problem.getStartState(), '', 0)
     fringe = util.PriorityQueue()
-    fringe.push(start_state_var)
+    fringe.push(start_state_var, 0)
+
     goal_state = util.Stack()
     goal_path = util.Stack()
 
@@ -256,17 +257,24 @@ def uniformCostSearch(problem):
 
     while(not fringe.isEmpty()):
         next_state, action, cost = fringe.pop()
+        """
+        By adding to visited grid here, I am ensuring the minimum fringe value is expanded
+        first. Suppose there is some other node such that cost to a given node is lesser
+        than the current path, though cost of getting to that node is higher than current 
+        path. Then if the cost of current path + node > other node, the other node is expanded.
+        """
         visited_grid[next_state] = None
-        var_dict[next_state] = (next_state, action, cost)
+        var_dict[next_state] = (next_state, action)
 
         if(problem.isGoalState(next_state)):
             print("Hit goal state:", next_state)
             parent_state = next_state
-            _1, action, _2 = var_dict[parent_state]
+            _, action = var_dict[parent_state]
             goal_state.push(action)
+
             while parent_state!=problem.getStartState():
                 parent_state = parent_dict[parent_state]
-                _1, action, _2 = var_dict[parent_state]
+                _, action = var_dict[parent_state]
                 goal_state.push(action)
 
             while not goal_state.isEmpty():
@@ -282,7 +290,7 @@ def uniformCostSearch(problem):
 
             for i, j, k in successor_list:
                 if not i in visited_grid:
-                    fringe.push((i, j, k))
+                    fringe.push((i, j, cost+k), cost+k)
                     parent_dict[i] = next_state
                     no_successors = False
 
