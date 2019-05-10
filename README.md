@@ -1,10 +1,16 @@
 # cs-188-ucb
 Here you will find implementations of assignments, homeworks, demos and other interesting pieces of code. Feel free to use!
-
+# Theory
 ## Uninformed Search
 1. Uniform Cost Search: Pending...
 ## Informed Search
 1. A*: Pending...
+## Heuristics
+Pending...
+### Greedy faliure
+Counter example: Consider the following maze.![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/greedy_search_counter_example.png)
+## Admissibility and Consistency
+Pending...
 ## Constraint Satisfaction Problems
 **Some assumptions:** Single friendly agent, completely deterministic. We also assume a fully observed space and a discrete state space.
 * Used for identification tasks by making valid assignments to some variables satisfying the constraints of the problem.
@@ -24,3 +30,9 @@ Here you will find implementations of assignments, homeworks, demos and other in
 * **Ordering:** Order in which variables are to be chosen. For CSPs we have heuristics based on variables and values assigned.
   * **Variable Order:** Select the variable with minimum remaining values in its domain. This is the most constrained variable and upon should the assignment be invalid it will have lesser backtracking.
   * **Value Order:** Select the value that rules out the fewest values.
+## 
+
+# Projects
+## Project 1: Search
+Pending...
+Completed: ![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/project_1.png)
