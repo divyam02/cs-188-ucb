@@ -288,6 +288,7 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+        self.cost = 1
 
     def getStartState(self):
         """
@@ -295,14 +296,26 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
+        """
+        Define new state space! Include if visited for corners as the new state.
+        BFS will now identify these as new nodes of a graph, with the goal state
+        being ((x, y), T, T, T, T). Could use ((x1,y1),(x2,y2),(x3,y3),(x4,y4)),
+        but too expensive. Also harder for actions.
+        """
+        return self.startingPosition, False, False, False, False
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
+        _, c1, c2, c3, c4 = state
+        if c1 and c2 and c3 and c4:
+            return True
+        return False
+
 
     def getSuccessors(self, state):
         """
@@ -314,7 +327,6 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
@@ -323,8 +335,24 @@ class CornersProblem(search.SearchProblem):
             #   dx, dy = Actions.directionToVector(action)
             #   nextx, nexty = int(x + dx), int(y + dy)
             #   hitsWall = self.walls[nextx][nexty]
-
             "*** YOUR CODE HERE ***"
+            pos, c1, c2, c3, c4 = state
+            x, y = pos
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if not self.walls[nextx][nexty]:
+                nextState = (nextx, nexty)
+                if nextState in self.corners:
+                    if nextState==self.corners[0]:nextState = (nextState, True, c2, c3, c4)
+                    if nextState==self.corners[1]:nextState = (nextState, c1, True, c3, c4)
+                    if nextState==self.corners[2]:nextState = (nextState, c1, c2, True, c4)
+                    if nextState==self.corners[3]:nextState = (nextState, c1, c2, c3, True)
+                else:
+                    nextState = (nextState, c1, c2, c3, c4)
+                cost = self.cost
+                successors.append( ( nextState, action, cost) )
+
+
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
