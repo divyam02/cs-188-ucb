@@ -393,7 +393,7 @@ def cornersHeuristic(state, problem):
     pos, c1, c2, c3, c4 = state
     """
     Consider a (very) relaxed problem, where Pac-Man starts
-    at a corner with no walls.
+    at a corner with no walls. Inconsistent however...
     """
     base = abs(g1[1] - g2[1]) + abs(g1[0] - g3[0])
     dist = 3 * base
@@ -496,7 +496,26 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    #return 0
+    max_x = 0
+    max_y = 0
+    min_x = 0
+    min_y = 0
+    x, y = position
+    for i in range(foodGrid.width):
+        for j in range(foodGrid.height):
+            if(foodGrid[i][j]):
+                x_dist = x - i
+                y_dist = y - j
+                if x_dist >= max_x:
+                    max_x = x_dist
+                elif x_dist < min_x:
+                    min_x = x_dist
+                if y_dist >= max_y:
+                    max_y = y_dist
+                elif y_dist < min_y:
+                    min_y = y_dist
+    return (max_x - min_x) + (max_y - min_y)
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
