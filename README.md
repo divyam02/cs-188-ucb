@@ -30,7 +30,8 @@ Pending...
 * **Ordering:** Order in which variables are to be chosen. For CSPs we have heuristics based on variables and values assigned.
   * **Variable Order:** Select the variable with minimum remaining values in its domain. This is the most constrained variable and upon should the assignment be invalid it will have lesser backtracking.
   * **Value Order:** Select the value that rules out the fewest values.
-## 
+## Adversarial Search
+Pending...
 
 # Projects
 ## Project 1: Search
