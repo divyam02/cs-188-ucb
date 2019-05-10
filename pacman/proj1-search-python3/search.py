@@ -89,13 +89,6 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    #util.raiseNotDefined()
-    print("Start:",problem.getStartState())
-    print(type(problem.getStartState()))
-    print("Is start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start state successors:", problem.getSuccessors(problem.getStartState()))
-    print(type(problem.getSuccessors(problem.getStartState())))
-
     """
     Check legal actions for every state. Encounter leaf node iff no legal actions remaining...
     Make grid to mark visited nodes. (Copy GameState.getWalls())
@@ -114,7 +107,7 @@ def depthFirstSearch(problem):
 
     parent_dict[problem.getStartState()] = 0
 
-    visited_grid[problem.getStartState] = None
+    #visited_grid[problem.getStartState()] = None
 
     while(not fringe.isEmpty()):
         next_state, action, cost = fringe.pop()
@@ -133,37 +126,29 @@ def depthFirstSearch(problem):
             while not goal_state.isEmpty():
                 goal_path.push(goal_state.pop())
 
-            print(goal_path.list[1:])
-            print(len(goal_path.list[1:]))
+            #print(goal_path.list[1:])
+            #print(len(goal_path.list[1:]))
             return goal_path.list[1:]
 
-        else:
+        if(not next_state in visited_grid):
             """
             Maintain grid copy and mark off visited nodes...
             Leaf if all successor states already visited.
             Keep dict node:parent to get path.
             """
+            visited_grid[next_state] = None
             successor_list = problem.getSuccessors(next_state)
-
             for i, j, k in successor_list:
-                if not i in visited_grid:
+                if(not i in visited_grid):
                     fringe.push((i, j, k))
                     parent_dict[i] = next_state
-                    visited_grid[i] = None
-
+                    #visited_grid[i] = None
 
     return []
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    #util.raiseNotDefined()
-    print("Start:",problem.getStartState())
-    print(type(problem.getStartState()))
-    print("Is start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start state successors:", problem.getSuccessors(problem.getStartState()))
-    print(type(problem.getSuccessors(problem.getStartState())))
-
     """
     Check legal actions for every state. Encounter leaf node iff no legal actions remaining...
     Make grid to mark visited nodes. (Copy GameState.getWalls())
@@ -182,7 +167,7 @@ def breadthFirstSearch(problem):
 
     parent_dict[problem.getStartState()] = 0
 
-    visited_grid[problem.getStartState] = None
+    visited_grid[problem.getStartState()] = None
 
     while(not fringe.isEmpty()):
         next_state, action, cost = fringe.pop()
@@ -201,8 +186,8 @@ def breadthFirstSearch(problem):
             while not goal_state.isEmpty():
                 goal_path.push(goal_state.pop())
 
-            print(goal_path.list[1:])
-            print(len(goal_path.list[1:]))
+            #print(goal_path.list[1:])
+            #print(len(goal_path.list[1:]))
             return goal_path.list[1:]
 
         else:
@@ -219,13 +204,6 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    #util.raiseNotDefined()
-    print("Start:",problem.getStartState())
-    print(type(problem.getStartState()))
-    print("Is start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start state successors:", problem.getSuccessors(problem.getStartState()))
-    print(type(problem.getSuccessors(problem.getStartState())))
-
     """
     Check legal actions for every state. Encounter leaf node iff no legal actions remaining...
     Make grid to mark visited nodes. (Copy GameState.getWalls())
@@ -234,6 +212,7 @@ def uniformCostSearch(problem):
     visited_grid = dict()
     parent_dict = dict()
     var_dict = dict()
+    cost_dict = dict()
 
     start_state_var = (problem.getStartState(), '', 0)
     fringe = util.PriorityQueue()
@@ -244,9 +223,9 @@ def uniformCostSearch(problem):
 
     parent_dict[problem.getStartState()] = 0
 
-    visited_grid[problem.getStartState] = None
+    visited_grid[problem.getStartState()] = None
 
-
+    cost_dict[problem.getStartState()] = 0
     while(not fringe.isEmpty()):
         next_state, action, cost = fringe.pop()
         """
@@ -271,8 +250,8 @@ def uniformCostSearch(problem):
             while not goal_state.isEmpty():
                 goal_path.push(goal_state.pop())
 
-            print(goal_path.list[1:])
-            print(len(goal_path.list[1:]))
+            #print(goal_path.list[1:])
+            #print(len(goal_path.list[1:]))
             return goal_path.list[1:]
 
         else:
@@ -280,9 +259,15 @@ def uniformCostSearch(problem):
 
             for i, j, k in successor_list:
                 if not i in visited_grid:
-                    fringe.push((i, j, cost+k), cost+k)
+                    fringe.update((i, j, cost+k), cost+k)
+                    cost_dict[i] = cost + k
                     parent_dict[i] = next_state
                     visited_grid[i] = None
+                else:
+                    if cost+k < cost_dict[i]:
+                        fringe.update((i, j, cost+k), cost+k)
+                        cost_dict[i] = cost + k
+                        parent_dict[i] = next_state
 
     return []
 
@@ -297,13 +282,6 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    #util.raiseNotDefined()
-    print("Start:",problem.getStartState())
-    print(type(problem.getStartState()))
-    print("Is start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start state successors:", problem.getSuccessors(problem.getStartState()))
-    print(type(problem.getSuccessors(problem.getStartState())))
-
     """
     Check legal actions for every state. Encounter leaf node iff no legal actions remaining...
     Make grid to mark visited nodes. (Copy GameState.getWalls())
@@ -317,18 +295,20 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     visited_grid = dict()
     parent_dict = dict()
     var_dict = dict()
+    cost_dict = dict()
 
     start_state_var = (problem.getStartState(), '', 0)
     fringe = util.PriorityQueue()
-    fringe.push(start_state_var, 0)
+    fringe.push(start_state_var, 0 + h_dist(problem.getStartState(), problem))
 
     goal_state = util.Stack()
     goal_path = util.Stack()
 
     parent_dict[problem.getStartState()] = 0
 
-    visited_grid[problem.getStartState] = None
+    visited_grid[problem.getStartState()] = None
 
+    cost_dict[problem.getStartState()] = 0
     while(not fringe.isEmpty()):
         next_state, action, cost = fringe.pop()
         """
@@ -353,8 +333,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             while not goal_state.isEmpty():
                 goal_path.push(goal_state.pop())
 
-            print(goal_path.list[1:])
-            print(len(goal_path.list[1:]))
+            #print(goal_path.list[1:])
+            #print(len(goal_path.list[1:]))
             return goal_path.list[1:]
 
         else:
@@ -363,8 +343,14 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             for i, j, k in successor_list:
                 if not i in visited_grid:
                     fringe.push((i, j, cost+k), cost+k+h_dist(i, problem))
+                    cost_dict[i] = cost+k
                     parent_dict[i] = next_state
                     visited_grid[i] = None
+                else:
+                    if cost+k < cost_dict[i]:
+                        fringe.update((i, j, cost+k), cost+k+h_dist(i, problem))
+                        cost_dict[i] = cost + k
+                        parent_dict[i] = next_state
 
     return []
     

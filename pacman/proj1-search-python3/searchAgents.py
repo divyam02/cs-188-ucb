@@ -393,16 +393,19 @@ def cornersHeuristic(state, problem):
     pos, c1, c2, c3, c4 = state
     """
     Consider a (very) relaxed problem, where Pac-Man starts
-    at a corner with no walls. Inconsistent however...
+    at a corner with no walls. Consistent because taking
+    max of manhattan distances. -1<=h(A)-h(B)<=1 = c(A, B)
     """
-    base = abs(g1[1] - g2[1]) + abs(g1[0] - g3[0])
-    dist = 3 * base
-    if c1:dist = dist - base
-    if c2:dist = dist - base
-    if c3:dist = dist - base
-    if c4:dist = dist - base
-    
-    return dist
+    d1 = abs(pos[0] - g1[0]) + abs(pos[1] - g1[1])
+    d2 = abs(pos[0] - g2[0]) + abs(pos[1] - g2[1])
+    d3 = abs(pos[0] - g3[0]) + abs(pos[1] - g3[1])
+    d4 = abs(pos[0] - g4[0]) + abs(pos[1] - g4[1])
+    if c1:d1 = 0
+    if c2:d2 = 0
+    if c3:d3 = 0
+    if c4:d4 = 0
+
+    return max(d1, d2, d3, d4)
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -496,6 +499,10 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
+    """
+    Took some refining. Final version!
+    @Note: Update cornersHeuristic as well.
+    """
     #return 0
     max_x = 0
     max_y = 0
@@ -546,7 +553,9 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
+        return search.bfs(problem)
+
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -582,7 +591,10 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
+        if self.food[x][y]:
+            return True
+        return False
 
 def mazeDistance(point1, point2, gameState):
     """
