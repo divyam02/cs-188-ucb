@@ -108,35 +108,26 @@ def depthFirstSearch(problem):
     start_state_var = (problem.getStartState(), '', 0)
     fringe = util.Stack()
     fringe.push(start_state_var)
+
     goal_state = util.Stack()
     goal_path = util.Stack()
 
     parent_dict[problem.getStartState()] = 0
 
+    visited_grid[problem.getStartState] = None
+
     while(not fringe.isEmpty()):
         next_state, action, cost = fringe.pop()
-        visited_grid[next_state] = None
         var_dict[next_state] = (next_state, action, cost)
-        #goal_path.push(action)
-
-        #print("Next state:",next_state)
-        #print("goal_path:",goal_path.list)
-        #print("visited_grid:",visited_grid.keys())
-
+        
         if(problem.isGoalState(next_state)):
             print("Hit goal state:", next_state)
-            # Start traceback...
-            #return goal_path.list[1:]
-            #goal_path.push(var_dict[next_state][1])
             parent_state = next_state
             _1, action, _2 = var_dict[parent_state]
-            #print(action)
             goal_state.push(action)
             while parent_state!=problem.getStartState():
-                #print("Parent state:",parent_state)
                 parent_state = parent_dict[parent_state]
                 _1, action, _2 = var_dict[parent_state]
-                #print(action)
                 goal_state.push(action)
 
             while not goal_state.isEmpty():
@@ -152,19 +143,16 @@ def depthFirstSearch(problem):
             Leaf if all successor states already visited.
             Keep dict node:parent to get path.
             """
-            no_successors = True
             successor_list = problem.getSuccessors(next_state)
 
             for i, j, k in successor_list:
                 if not i in visited_grid:
                     fringe.push((i, j, k))
                     parent_dict[i] = next_state
-                    no_successors = False
+                    visited_grid[i] = None
 
-            #print("successor_list:",successor_list)
-            #print("Fringe:", fringe.list)
 
-    return goal_path
+    return []
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -188,14 +176,16 @@ def breadthFirstSearch(problem):
     start_state_var = (problem.getStartState(), '', 0)
     fringe = util.Queue()
     fringe.push(start_state_var)
+
     goal_state = util.Stack()
     goal_path = util.Stack()
 
     parent_dict[problem.getStartState()] = 0
 
+    visited_grid[problem.getStartState] = None
+
     while(not fringe.isEmpty()):
         next_state, action, cost = fringe.pop()
-        visited_grid[next_state] = None
         var_dict[next_state] = (next_state, action, cost)
 
         if(problem.isGoalState(next_state)):
@@ -216,16 +206,15 @@ def breadthFirstSearch(problem):
             return goal_path.list[1:]
 
         else:
-            no_successors = True
             successor_list = problem.getSuccessors(next_state)
 
             for i, j, k in successor_list:
                 if not i in visited_grid:
                     fringe.push((i, j, k))
                     parent_dict[i] = next_state
-                    no_successors = False
+                    visited_grid[i] = None
 
-    return goal_path
+    return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
@@ -255,6 +244,9 @@ def uniformCostSearch(problem):
 
     parent_dict[problem.getStartState()] = 0
 
+    visited_grid[problem.getStartState] = None
+
+
     while(not fringe.isEmpty()):
         next_state, action, cost = fringe.pop()
         """
@@ -263,7 +255,6 @@ def uniformCostSearch(problem):
         than the current path, though cost of getting to that node is higher than current 
         path. Then if the cost of current path + node > other node, the other node is expanded.
         """
-        visited_grid[next_state] = None
         var_dict[next_state] = (next_state, action)
 
         if(problem.isGoalState(next_state)):
@@ -285,16 +276,15 @@ def uniformCostSearch(problem):
             return goal_path.list[1:]
 
         else:
-            no_successors = True
             successor_list = problem.getSuccessors(next_state)
 
             for i, j, k in successor_list:
                 if not i in visited_grid:
                     fringe.push((i, j, cost+k), cost+k)
                     parent_dict[i] = next_state
-                    no_successors = False
+                    visited_grid[next_state] = None
 
-    return goal_path
+    return []
 
 
 def nullHeuristic(state, problem=None):
@@ -335,6 +325,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
     parent_dict[problem.getStartState()] = 0
 
+    visited_grid[problem.getStartState] = None
+
     while(not fringe.isEmpty()):
         next_state, action, cost = fringe.pop()
         """
@@ -343,7 +335,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         than the current path, though cost of getting to that node is higher than current 
         path. Then if the cost of current path + node > other node, the other node is expanded.
         """
-        visited_grid[next_state] = None
         var_dict[next_state] = (next_state, action)
 
         if(problem.isGoalState(next_state)):
@@ -365,16 +356,15 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             return goal_path.list[1:]
 
         else:
-            no_successors = True
             successor_list = problem.getSuccessors(next_state)
 
             for i, j, k in successor_list:
                 if not i in visited_grid:
                     fringe.push((i, j, cost+k), cost+k+h_dist(i, problem))
                     parent_dict[i] = next_state
-                    no_successors = False
+                    visited_grid[next_state] = None
 
-    return goal_path
+    return []
     
 
 # Abbreviations
