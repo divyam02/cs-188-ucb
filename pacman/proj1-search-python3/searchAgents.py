@@ -388,7 +388,21 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    #return 0 # Default to trivial solution
+    g1, g2, g3, g4 = corners
+    pos, c1, c2, c3, c4 = state
+    """
+    Consider a (very) relaxed problem, where Pac-Man starts
+    at a corner with no walls.
+    """
+    base = abs(g1[1] - g2[1]) + abs(g1[0] - g3[0])
+    dist = 3 * base
+    if c1:dist = dist - base
+    if c2:dist = dist - base
+    if c3:dist = dist - base
+    if c4:dist = dist - base
+    
+    return dist
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"

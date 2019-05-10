@@ -282,7 +282,7 @@ def uniformCostSearch(problem):
                 if not i in visited_grid:
                     fringe.push((i, j, cost+k), cost+k)
                     parent_dict[i] = next_state
-                    visited_grid[next_state] = None
+                    visited_grid[i] = None
 
     return []
 
@@ -310,7 +310,9 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     Keep stack to append or pop legal path.
     """
 
-    from searchAgents import manhattanHeuristic as h_dist
+    #from searchAgents import manhattanHeuristic as h_dist
+    h_dist = heuristic
+    print(h_dist)
 
     visited_grid = dict()
     parent_dict = dict()
@@ -362,7 +364,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 if not i in visited_grid:
                     fringe.push((i, j, cost+k), cost+k+h_dist(i, problem))
                     parent_dict[i] = next_state
-                    visited_grid[next_state] = None
+                    visited_grid[i] = None
 
     return []
     
