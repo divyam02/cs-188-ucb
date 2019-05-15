@@ -31,8 +31,29 @@ Pending...
   * **Variable Order:** Select the variable with minimum remaining values in its domain. This is the most constrained variable and upon should the assignment be invalid it will have lesser backtracking.
   * **Value Order:** Select the value that rules out the fewest values.
 ## Adversarial Search
-Pending...
-
+Now there are agents not in our control. The actions taken are no longer deterministic. Many of these search problems can be treated as **zero sum games**.
+* **Zero Sum Game:** All agents attempt to maximize their utility using a common resource. In a zero sum game, adversarial agents can maximize their utility by actively minimizing the opponent's utility. What follows below is based on actions being taken in discrete time ie, the agents are turn based and control a layer of the adversarial search tree.
+* Adversarial search returns a **policy**, that recommends an action to yield maximum utility.
+* **Value of a state:** The best achievable utility from that state in a zero sum game. Value(state) = V(s in S) = max V(s in children of s), where S is the set of all states and the value terminal states are known (the game has ended). 
+* How to optimize? Pretend to be the other agent and try to minimize your opponent's score (ie maximize your own).
+### Minimax Search
+Each node in the tree computes its minimax value; the best utility against a rational adversary.
+```
+def max_value(state):
+ init v = -inf
+ for all successors of state:
+  v = min(v, max_value(successors))
+ return v
+ 
+def min_value(state):
+ init v = +inf
+ for all successors of state:
+  v = min(v, min_value(successors))
+ return v
+```
+### Minimax Efficiency
+* DFS time: O(b^m) considering all branches for all possible moves.
+* However we can get away with not exploring the entire tree! 
 # Projects
 ## Project 1: Search
 **Notes:** Pending...
