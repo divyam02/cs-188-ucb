@@ -37,7 +37,7 @@ Now there are agents not in our control. The actions taken are no longer determi
 * **Value of a state:** The best achievable utility from that state in a zero sum game. Value(state) = V(s in S) = max V(s in children of s), where S is the set of all states and the value terminal states are known (the game has ended). 
 * How to optimize? Pretend to be the other agent and try to minimize your opponent's score (ie maximize your own).
 ### Minimax Search
-Each node in the tree computes its minimax value; the best utility against a rational adversary.
+Each node in the tree computes its minimax value; the best utility against a rational adversary. For efficieny, it traverses in a post-order format.
 ```
 def max_value(state):
  init v = -inf
@@ -53,9 +53,35 @@ def min_value(state):
 ```
 ### Minimax Efficiency
 * DFS time: O(b^m) considering all branches for all possible moves.
-* However we can get away with not exploring the entire tree! 
+* However we can get away with not exploring the entire tree!
+* **Search-tree/Alpha-Beta Pruning:** We will need to explore atleast one branch entirely, to get the initial utilities of branching states. Now we can compare: If a minimizer node has a possible value less that the utility of a previously explored min node with the same maximizer parent, we can stop exploring that branch. The maximizer already has a better option. Hence if we are trying to determine the value of some node by looking at its successors we can stop as soon as we know its value can at best be the optimal value of the parent. Theoretical bound: O(b^(m/2)). 
+* Actual search trees end up being far more complex. Typically in a game like chess, searching more than 2 levels deep starts becoming unfeasible. With this we can explore double the depth (actions).
+```
+# alpha = player1's best option on path.
+# beta = player2's best option on path.
+
+def max_value(state, alpha, beta):
+ init v = -inf
+ for successors of state:
+  v = max(v, value(successor, alpha, beta))
+  if v>= beta:return v
+  alpha = max(v, alpha)
+ return v
+ 
+def min_value(state, alpha, beta):
+ init v = +inf
+ for successors of state:
+  v = min(v, value(successor, alpha, beta))
+  if v<= alpha:return v
+  beta = min(v, beta)
+ return v
+```
 # Projects
 ## Project 1: Search
 **Notes:** Pending...
 
 ![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/project1.png)
+
+## Project 2: Multi-Agent Search
+**Notes:** Pending...
+
