@@ -76,6 +76,9 @@ def min_value(state, alpha, beta):
   beta = min(v, beta)
  return v
 ```
+### Evaluation Functions
+Since reaching the bottom of adversarial search trees for more complex games, we must estimate the value of a node depending on the current state. In case of **depth-limited minimax**, non-terminal nodes at the maximum depth limit are treated as terminal and are given an estimate of the true minimax value. Typically a good evaluation function will ensure "better" state have a higher value than others.
+* A common heuristic is to use a linear combination of features from the current state. Some approaches use machine learning to estimate over time, a good state and a bad state.
 # Projects
 ## Project 1: Search
 **Notes:** Pending...
