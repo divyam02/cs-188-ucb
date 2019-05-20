@@ -73,8 +73,82 @@ class ReflexAgent(Agent):
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
+        """
+        Just make sure to keep away from the ghosts. 
+        @Pending:
+        Add points for edible ghost times.
+        """
         "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+        print(newScaredTimes)
+        print(newFood)
+        print(successorGameState)
+        def get_ghost_dist(pacman, ghosts):
+            dist = []
+            index = 0
+            for x, y in successorGameState.getGhostPositions():
+                #if newScaredTimes[index] == 0:
+                dist.append((abs(pacman[0] - x) + abs(pacman[1] - y)))
+                print("ghost-wise distance:", pow((pacman[0] - x), 2), pow((pacman[1] - y), 2))
+            index += 1
+            #if len(dist) > 0:
+            if min(dist) <= 2:
+                return -99999
+            return 100 * min(dist)    
+            #else:
+            #    return 10000
+
+        def get_pellet_score(currentGameState, successorGameState):
+            if successorGameState.getNumFood() < currentGameState.getNumFood():
+                return 2000
+            return 0 
+
+        def keep_moving(currentGameState, successorGameState):
+            if currentGameState.getPacmanPosition() != newPos:
+                return 10
+            return -10
+        """
+        def get_closest_edible_ghost(pacman, ghosts, newScaredTimes):
+            for i in range(len(newScaredTimes)):
+                scared = []
+                if newScaredTimes[i] != 0:
+                    x, y = ghosts[i]
+                    scared.append((abs(pacman[0] - x) + abs(pacman[1] - y)))
+            if len(scared)>0:
+                if get_closest_food(pacman, newFood) > min(scared):
+                    return 10000
+                else:
+                    return 0
+            return 0
+        """
+
+        def get_closest_food(pacman, newFood):
+            dist = []
+            for x, y in newFood.asList():
+                dist.append(abs(pacman[0] - x) + abs(pacman[1] - y))
+            if len(dist) > 0:
+                return min(dist)
+            return 0
+
+        def abs_win(successorGameState):
+            if successorGameState.isWin():
+                return 99999
+            return 0
+
+        def abs_loss(successorGameState):
+            if successorGameState.isLose():
+                return -99999
+            return 0
+
+        score = get_ghost_dist(newPos, successorGameState.getGhostPositions()) 
+        score += get_pellet_score(currentGameState, successorGameState)
+        score += get_closest_food(newPos, newFood) * -100
+        score += abs_win(successorGameState) + abs_loss(successorGameState)
+        score += successorGameState.getScore()
+        #score += get_closest_edible_ghost(newPos, successorGameState.getGhostPositions(), newScaredTimes)
+        score += keep_moving(currentGameState, successorGameState) * 100
+        print(score)
+        return score       
+
 
 def scoreEvaluationFunction(currentGameState):
     """
