@@ -40,16 +40,24 @@ Now there are agents not in our control. The actions taken are no longer determi
 ### Minimax Search
 Each node in the tree computes its minimax value; the best utility against a rational adversary. For efficieny, it traverses in a post-order format.
 ```
+def value(state):
+ if terminial state:
+  return state utility
+ elif max_agent state:
+  return max_value(state)
+ else:
+  return min_value(state)
+  
 def max_value(state):
  init v = -inf
  for all successors of state:
-  v = min(v, max_value(successors))
+  v = min(v, value(successors))
  return v
  
 def min_value(state):
  init v = +inf
  for all successors of state:
-  v = min(v, min_value(successors))
+  v = min(v, value(successors))
  return v
 ```
 ### Minimax Efficiency
