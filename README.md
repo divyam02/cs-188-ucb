@@ -100,3 +100,4 @@ This is a replacement for minimax when the opponent is playing suboptimally.
 ## Project 2: Multi-Agent Search
 **Notes:** Pending...
 
+![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/project2.png)
