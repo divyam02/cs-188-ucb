@@ -79,9 +79,9 @@ class ReflexAgent(Agent):
         Add points for edible ghost times.
         """
         "*** YOUR CODE HERE ***"
-        print(newScaredTimes)
-        print(newFood)
-        print(successorGameState)
+        #print(newScaredTimes)
+        #print(newFood)
+        #print(successorGameState)
         def get_ghost_dist(pacman, ghosts):
             dist = []
             index = 0
@@ -353,7 +353,60 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        num_agents = gameState.getNumAgents()
+        pacman_actions = gameState.getLegalActions()
+        curr_depth = 0
+        agent_index = 0
+        max_depth = self.depth*num_agents
+        #print(num_agents)
+
+        def value(state, curr_depth, agent):
+            agent = agent%num_agents
+            """
+            @Note: Expectimax can't use alpha-beta pruning.
+            """
+            if curr_depth == max_depth or state.isWin() or state.isLose():
+                return self.evaluationFunction(state)
+            if agent == 0:
+                return max_value(state, curr_depth, agent)
+            else:
+                return exp_value(state, curr_depth, agent)
+
+        def max_value(state, curr_depth, agent):
+            v = -float("inf")
+            if len(state.getLegalActions(agent))==0:
+                print("WARNING. No actions available for agent", agent, "at depth", curr_depth)
+                print(state.getLegalActions(agent))
+
+            for action in state.getLegalActions(agent):
+                next_state = state.generateSuccessor(agent, action)
+                v = max(v, value(next_state, curr_depth+1, agent+1))
+            return v
+
+        def exp_value(state, curr_depth, agent):
+            v = 0
+            if len(state.getLegalActions(agent))==0:
+                print("WARNING. No actions available for agent", agent, "at depth", curr_depth)
+                print(state.getLegalActions(agent))
+
+            prob = 1/len(state.getLegalActions(agent))
+            for action in state.getLegalActions(agent):
+                next_state = state.generateSuccessor(agent, action)
+                v += prob*value(next_state, curr_depth+1, agent+1)
+            return v
+
+        init_value = value(gameState, curr_depth, agent_index)
+        #print("Initial value:\n", init_value)
+
+        minimax_action = None
+        init_value = -float("inf")
+        next_state_values = [(init_value, minimax_action)]
+        for action in gameState.getLegalActions(0):
+            next_state_values.append((value(gameState.generateSuccessor(0, action), 1, 1), action))
+
+        init_value, minimax_action = max(next_state_values)
+        #print(init_value)
+        return minimax_action        
 
 def betterEvaluationFunction(currentGameState):
     """
