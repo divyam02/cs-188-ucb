@@ -284,28 +284,24 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         curr_depth = 0
         agent_index = 0
         max_depth = self.depth*num_agents
-        self.alpha = -float("inf")
-        self.beta = float("inf")
+        alpha = -float("inf")
+        beta = float("inf")
 
-        def value(state, curr_depth, agent):
+        def value(state, curr_depth, agent, alpha, beta):
             agent = agent%num_agents
             """
-            @Note:This fails when pacman is gets surrounded by ghosts and walls. 
-            So either he has won or lost in that position, hence return
-            terminal values.
-
-            #if curr_depth == self.depth*num_agents:
+            @Note: Keeping global variables was a bad idea.
 
             """
             if curr_depth == max_depth or state.isWin() or state.isLose():
                 score = self.evaluationFunction(state) 
                 return score
             if agent == 0:
-                return max_value(state, curr_depth, agent)
+                return max_value(state, curr_depth, agent, alpha, beta)
             else:
-                return min_value(state, curr_depth, agent)
+                return min_value(state, curr_depth, agent, alpha, beta)
 
-        def max_value(state, curr_depth, agent):
+        def max_value(state, curr_depth, agent, alpha, beta):
             v = -float("inf")
             if len(state.getLegalActions(agent))==0:
                 print("WARNING. No actions available for agent", agent, "at depth", curr_depth)
@@ -313,12 +309,12 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
             for action in state.getLegalActions(agent):
                 next_state = state.generateSuccessor(agent, action)
-                v = max(v, value(next_state, curr_depth+1, agent+1))
-                if v > self.beta:return v
-                self.alpha = max(self.alpha, v)
+                v = max(v, value(next_state, curr_depth+1, agent+1, alpha, beta))
+                if v > beta:return v
+                alpha = max(alpha, v)
             return v
 
-        def min_value(state, curr_depth, agent):
+        def min_value(state, curr_depth, agent, alpha, beta):
             v = float("inf")
             if len(state.getLegalActions(agent))==0:
                 print("WARNING. No actions available for agent", agent, "at depth", curr_depth)
@@ -326,21 +322,20 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
             for action in state.getLegalActions(agent):
                 next_state = state.generateSuccessor(agent, action)
-                v = min(v, value(next_state, curr_depth+1, agent+1))
-                if v < self.alpha:return v
-                self.beta = min(self.beta, v)
+                v = min(v, value(next_state, curr_depth+1, agent+1, alpha, beta))
+                if v < alpha:return v
+                beta = min(beta, v)
             return v
 
         minimax_action = None
         init_value = -float("inf")
         next_state_values = [(init_value, minimax_action)]
         for action in gameState.getLegalActions(0):
-            #next_state_values.append((value(gameState.generateSuccessor(0, action), 1, 1), action))
-            state_value = value(gameState.generateSuccessor(0, action), 1, 1)
+            state_value = value(gameState.generateSuccessor(0, action), 1, 1, alpha, beta)
             if init_value < state_value:
                 init_value = state_value
                 minimax_action = action
-            self.alpha = max(self.alpha, init_value)
+            alpha = max(alpha, init_value)
 
         #print(init_value)
         return minimax_action        
