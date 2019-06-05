@@ -63,9 +63,14 @@ class ValueIterationAgent(ValueEstimationAgent):
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
         for i in range(self.iterations):
+          q_value_counter = util.Counter()
           for state in self.mdp.getStates():
-            best_value, best_action = self.computeActionFromValues(state)
-            self.values[state] = best_value
+            action_value_counter = util.Counter()
+            for action in self.mdp.getPossibleActions(state):
+              action_value_counter[action] = self.computeQValueFromValues(state, action)
+            q_value_counter[state] = action_value_counter[action_value_counter.argMax()]
+          for state in self.mdp.getStates():
+            self.values[state] = q_value_counter[state]
 
     def getValue(self, state):
         """
@@ -101,7 +106,7 @@ class ValueIterationAgent(ValueEstimationAgent):
           if temp_q_value >= best_q_value:
             best_action = action
             best_q_value = temp_q_value
-        return best_q_value, best_action
+        return best_action
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
