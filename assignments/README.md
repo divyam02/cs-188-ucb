@@ -6,3 +6,4 @@ I will try doing these in latex, with some code.
 * ~~Section 3: CSPs and Gamees.~~
 * HW 2
 * HW 3
+* HW 4
