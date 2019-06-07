@@ -1,5 +1,21 @@
 # cs-188-ucb
 Here you will find implementations of assignments, homeworks, demos and other interesting pieces of code. Feel free to use!
+# Projects
+## Project 1: Search
+**Notes:** Pending...
+
+![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/project1.png)
+
+## Project 2: Multi-Agent Search
+**Notes:** Pending...
+
+![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/project2.png)
+
+## Project 3: Reinforcement Learning
+**Notes:** Pending...
+
+![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/project3.png)
+
 # Theory
 ## Uninformed Search
 1. Uniform Cost Search: Pending...
@@ -91,13 +107,3 @@ Since reaching the bottom of adversarial search trees for more complex games, we
 
 ### Expectimax
 This is a replacement for minimax when the opponent is playing suboptimally. 
-# Projects
-## Project 1: Search
-**Notes:** Pending...
-
-![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/project1.png)
-
-## Project 2: Multi-Agent Search
-**Notes:** Pending...
-
-![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/project2.png)
