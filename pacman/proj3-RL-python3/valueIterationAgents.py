@@ -179,8 +179,45 @@ class PrioritizedSweepingValueIterationAgent(AsynchronousValueIterationAgent):
           and then act according to the resulting policy.
         """
         self.theta = theta
+        self.iterations = iterations
         ValueIterationAgent.__init__(self, mdp, discount, iterations)
 
     def runValueIteration(self):
         "*** YOUR CODE HERE ***"
+        predecessors = dict()
+        for state in self.mdp.getStates():
+          for action in self.mdp.getPossibleActions(state):
+            for succ_state, prob in self.mdp.getTransitionStatesAndProbs(state, action):
+              try:
+                predecessors[succ_state].add(state)
+              except:
+                predecessors[succ_state] = set()
+                predecessors[succ_state].add(state)
+        
+        heap_queue = util.PriorityQueue()
 
+        for state in self.mdp.getStates():
+          action_value_counter = util.Counter()
+          if not self.mdp.isTerminal(state):
+            for action in self.mdp.getPossibleActions(state):
+              action_value_counter[action] = self.computeQValueFromValues(state, action)
+            diff = abs(self.values[state] - action_value_counter[action_value_counter.argMax()])
+            heap_queue.push(state, -diff)
+
+        for step in range(self.iterations):
+          if heap_queue.isEmpty():
+            break
+          state = heap_queue.pop()
+          action_value_counter = util.Counter()
+          if not self.mdp.isTerminal(state):
+            for action in self.mdp.getPossibleActions(state):
+              action_value_counter[action] = self.computeQValueFromValues(state, action)
+            self.values[state] = action_value_counter[action_value_counter.argMax()]  
+
+          action_value_counter = util.Counter()
+          for pred in predecessors[state]:
+            for action in self.mdp.getPossibleActions(pred):
+                action_value_counter[action] = self.computeQValueFromValues(pred, action)
+            diff = abs(self.values[pred] - action_value_counter[action_value_counter.argMax()])
+            if diff>self.theta:
+              heap_queue.update(pred, -diff)
