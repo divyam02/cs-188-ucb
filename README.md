@@ -48,13 +48,21 @@ def tree_search(problem, fringe):
   * *Space Complexity:* From above, we maintatin a size b^(C*/e) fringe of the cheapest path nodes.
   
 ## Informed Search
-1. A*: Pending...
-## Heuristics
-Pending...
-### Greedy faliure
-Counter example: Consider the following maze.![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/greedy_search_counter_example.png)
-## Admissibility and Consistency
-Pending...
+Search algorithms like UCS can be made mush faster if there was some notion of searching in the right direction. Informed search uses **heuristics** to estimate the "distance" to goal states. Heuristics strictly depend on the current state and are solutions to relaxed versions of the search problem.
+* **Greedy Search:** Selects node with the lowest heuristic value. Does not guarantee completeness or optimality.
+    * *Greedy faliure:* Counter example: Consider the following maze.![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/greedy_search_counter_example.png)
+* **A* Search:** Selects node with the lowest estimated total cost of evaluation. This is the cost of the path from start to current node + the heuristic estimated distance of the current node. It is complete and optimal provided a sensible heuristic us being used. 
+* **Admissibility and Consistency:** Let g(n) be the backward cost, h(n) be the heuristic cost and f(n) = g(n) + h(n) where n is a node.
+**Admissibile:** 0≤h(n)≤h*(n) where h*(n) is the true optimal cost between the node and the goal state. 
+    * *Theorem:* For a given search problem, if the admissibility constraint is satisfied by a heuristic function h,using A* ***tree search*** with h on that search problem will yield an optimal solution.
+    * *Proof:* Assume two reachable goal states are located in the search tree for a given search problem, an optimal goal A and a suboptimal goal B. Some ancestor of A(including perhaps A itself) must currently be on the fringe, since A is reachable from the start state.  We claim n will be selected for expansion before B, using the following three statements:
+        * 1.g(A)<g(B). Because Ais given to be optimal and B is given to be suboptimal, we can conclude that A has a lower backwards cost to the start state than B.
+        * 2.h(A)=h(B)=0, because we are given that our heuristic satisfies the admissibility constraint.  Since both A and B are goal states, the true optimal cost to a goal state from A or B is simply h*(n)=0;h ence 0≤h(n)≤0.
+        * 3.f(n)≤f(A), because, through admissibility of h,f(n)=g(n)+h(n)≤g(n)+h*(n)=g(A)=f(A).The total cost through node n is at most the true backward cost of A, which is also the total cost of A.We can combine statements 1. and 2. to conclude that f(A)<f(B) as follows: f(A)=g(A)+h(A)=g(A)<g(B)=g(B)+h(B)=f(B). A simple consequence of combining the above derived inequality with statement 3. is the following: f(n)≤f(A)∧f(A)<f(B) => f(n)<f(B)Hence, we can conclude that n is expanded before B.  Because we have proven this for arbitrary n, we can conclude that all ancestors ofA(including A itself) expand before B.
+**Consistency:** ∀A,C h(A)−h(C)≤cost(A,C). We understimate not only the distance from the goal but also underestimates the weight of each edge.
+    * *Theorem:* For a given search problem, if the consistency constraint is satisfied by a heuristic function h,using A* ***graph search*** with h on that search problem will yield an optimal solution.
+    * *Proof:* Pending...
+
 ## Constraint Satisfaction Problems
 **Some assumptions:** Single friendly agent, completely deterministic. We also assume a fully observed space and a discrete state space.
 * Used for identification tasks by making valid assignments to some variables satisfying the constraints of the problem.
