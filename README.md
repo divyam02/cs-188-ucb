@@ -18,7 +18,35 @@ Here you will find implementations of assignments, homeworks, demos and other in
 
 # Theory
 ## Uninformed Search
-1. Uniform Cost Search: Pending...
+Works by maintaining an outer **fringe**; a set of nodes that the agent has to currently explore. We expand the fringe by replacing a node selected by our strategy(BFS,DFS,UCS) and replace that node with its children. In tree search we don't have to keep track of visited states (nodes).
+```
+def tree_search(problem, fringe):
+  fringe <- insert initial state
+  while(fringe is not empty):
+    node <- remove using strategy from fringe
+    if node is goal_state:
+      return node
+    for child_nodes of node:
+      fringe <- insert child_nodes
+```
+* **DFS:** Selects the deepest fringe node. Upon expansion the child nodes are now necessarily the deepest nodes on the fringe. A stack can be used to represent the fringe. 
+  * *Completness:* DFS is not complete. Consider a state space graph with a cycle. The corresponding search tree will be of infinite depth and DFS gets stuck.
+  * *Optimal:* Does not yield the lowest cost path, the first goal state encountered could be on the longest path.
+  * *Time Complexity:* (Can't escape this!) O(b^m) where b is the branching factor; the children added per expansion of fringe and m is the depth to which the fringe is expanded before obtaining a solution. Worst case the entire tree is explored.
+  * *Space Complexity:* From above, we maintatin a size b fringe at every depth of so O(bm)
+
+* **BFS:** Selects the shallowest fringe node. The nodes of a given layer are expanded entirely before moving to the child nodes. A queue can be used to represen the fringe.
+  * *Completeness:* BFS is complete! It will always find the shallowest goal state first.
+  * *Optimal:* Only when all edge weights are the same as it does not account for the cost of getting to a particular node.
+  * *Time Complexity:* (Can't escape this!) Worst case every node on the fringe is expanded, so O(b^m)
+  * *Space Complexity:* From above, we maintatin all children of the previous layer on the fringe. Worst case at the bottom layer we get b^m children, so O(b^m)
+  
+* **UCS:** Selects the lowest cost node for expansion. Cost associated with a node is from the sum of edge weights of path to the node. Can be represented using a priority queue.
+  * *Completeness:* UCS is complete! It will find the lowest cost goal state first. Infact, BFS is a special case of UCS where all edge weights are the same.
+  * *Optimal:* UCS is optimal when edge weights are non negative. Consider a search tree where at m-1 depth a more expensive path has a -inf edge. This path will never be explored and a goal state would be reached else where.
+  * *Time Complexity:* (Can't escape this!) Let the optimal path cost be C* and the minimal edge cost be e. Then if each node is explored in between, time complexity is O(b^(C*/e))
+  * *Space Complexity:* From above, we maintatin a size b^(C*/e) fringe of the cheapest path nodes.
+  
 ## Informed Search
 1. A*: Pending...
 ## Heuristics
