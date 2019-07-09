@@ -106,9 +106,9 @@ class DiscreteDistribution(dict):
         val = random.random()
         temp = 0
         for key, value in self.items():
-            if temp <= val < value+temp:
+            if temp < val and val <= value+temp:
                 return key
-            temp = value
+            temp += value
         
 
 class InferenceModule:
@@ -178,7 +178,18 @@ class InferenceModule:
         Return the probability P(noisyDistance | pacmanPosition, ghostPosition).
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+
+        if noisyDistance is None:
+            if jailPosition==ghostPosition:
+                return 1
+            else:
+                return 0
+        else:
+            if jailPosition==ghostPosition:
+                return 0
+
+        trueDistance = manhattanDistance(pacmanPosition, ghostPosition)
+        return busters.getObservationProbability(noisyDistance, trueDistance)
 
     def setGhostPosition(self, gameState, ghostPosition, index):
         """
