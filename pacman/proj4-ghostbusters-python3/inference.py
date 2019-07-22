@@ -273,7 +273,7 @@ class InferenceModule:
 class ExactInference(InferenceModule):
     """
     The exact dynamic inference module should use forward algorithm updates to
-    compute the exact belief function at each time step.
+    compute the exact belief function at each time step.    
     """
     def initializeUniformly(self, gameState):
         """
@@ -320,7 +320,16 @@ class ExactInference(InferenceModule):
         current position is known.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        temp = DiscreteDistribution()
+
+        for old_position in self.beliefs.keys():
+            new_position_beliefs = self.getPositionDistribution(gameState, old_position)
+            for new_position in new_position_beliefs.keys():
+                temp[new_position] += new_position_beliefs[new_position]*self.beliefs[old_position]
+
+        self.beliefs = temp
+        self.beliefs.normalize()
+
 
     def getBeliefDistribution(self):
         return self.beliefs
