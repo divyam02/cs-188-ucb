@@ -16,6 +16,11 @@ Here you will find implementations of assignments, homeworks, demos and other in
 
 ![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/project3.png)
 
+## Project 4: Particle Filtering
+**Notes:** Pending...
+
+![alt text](https://github.com/divyam02/cs-188-ucb/blob/master/screenshots/project4.png)
+
 # Theory
 ## Uninformed Search
 Works by maintaining an outer **fringe**; a set of nodes that the agent has to currently explore. We expand the fringe by replacing a node selected by our strategy(BFS,DFS,UCS) and replace that node with its children. In tree search we don't have to keep track of visited states (nodes).
