@@ -138,6 +138,12 @@ class DigitClassificationModel(object):
     def __init__(self):
         # Initialize your model parameters here
         "*** YOUR CODE HERE ***"
+        self.batch_size = 1
+        self.w0 = nn.Parameter(784, 100)
+        self.b0 = nn.Parameter(1, 100)
+        self.w1 = nn.Parameter(100, 10)
+        self.b1 = nn.Parameter(1, 10)
+
 
     def run(self, x):
         """
@@ -154,6 +160,12 @@ class DigitClassificationModel(object):
                 (also called logits)
         """
         "*** YOUR CODE HERE ***"
+        x = nn.Linear(x, self.w0)
+        x = nn.ReLU(nn.AddBias(x, self.b0))
+        x = nn.Linear(x, self.w1)
+        x = nn.AddBias(x, self.b1)
+
+        return x
 
     def get_loss(self, x, y):
         """
@@ -170,11 +182,27 @@ class DigitClassificationModel(object):
         """
         "*** YOUR CODE HERE ***"
 
+        return nn.SoftmaxLoss(self.run(x), y)
+
     def train(self, dataset):
         """
         Trains the model.
         """
         "*** YOUR CODE HERE ***"
+
+        while True:
+            for x, y in dataset.iterate_once(self.batch_size):
+                loss = self.get_loss(x, y)
+                grad = nn.gradients(loss, [self.w0, self.w1, self.b0, self.b1])
+
+                self.w0.update(grad[0], -0.005)
+                self.w1.update(grad[1], -0.005)
+                self.b0.update(grad[2], -0.005)
+                self.b1.update(grad[3], -0.005)
+
+            print(dataset.get_validation_accuracy())
+            if dataset.get_validation_accuracy() >= 0.97:
+                break
 
 class LanguageIDModel(object):
     """
@@ -194,6 +222,13 @@ class LanguageIDModel(object):
 
         # Initialize your model parameters here
         "*** YOUR CODE HERE ***"
+
+        self.batch_size = 2
+        self.hidden = 500
+        self.w0 = nn.Parameter(self.num_chars, self.hidden)
+        self.w1 = nn.Parameter(self.hidden, self.hidden)
+        self.w2 = nn.Parameter(self.hidden, len(self.languages))
+
 
     def run(self, xs):
         """
@@ -226,6 +261,13 @@ class LanguageIDModel(object):
         """
         "*** YOUR CODE HERE ***"
 
+        k = nn.Linear(xs[0], self.w0)
+        h = k
+        for i, x in enumerate(xs[1:]):
+            h = nn.Add(nn.Linear(x, self.w0), nn.Linear(h, self.w1))
+
+        return nn.Linear(h, self.w2)
+
     def get_loss(self, xs, y):
         """
         Computes the loss for a batch of examples.
@@ -242,8 +284,24 @@ class LanguageIDModel(object):
         """
         "*** YOUR CODE HERE ***"
 
+        return nn.SoftmaxLoss(self.run(xs), y)
+
     def train(self, dataset):
         """
         Trains the model.
         """
         "*** YOUR CODE HERE ***"
+
+
+        while True:
+            for x, y in dataset.iterate_once(self.batch_size):
+                loss = self.get_loss(x,y)
+                grad = nn.gradients(loss, [self.w0, self.w1, self.w2])
+
+                self.w0.update(grad[0], -0.005)
+                self.w1.update(grad[1], -0.005)
+                self.w2.update(grad[2], -0.005)
+
+            print(dataset.get_validation_accuracy())
+            if dataset.get_validation_accuracy() >= 0.86:
+                break
